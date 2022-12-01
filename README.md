@@ -3,7 +3,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com)
 
-Projeto Desenvolvido em dupla, para aprofundar os conhecimentos em python e na biblioteca pyGame
+Projeto Desenvolvido em dupla, para aprofundar os conhecimentos em python e na biblioteca pyGame.
 
 
 ## [![forthebadge](https://forthebadge.com/images/badges/built-by-developers.svg)](https://forthebadge.com)
