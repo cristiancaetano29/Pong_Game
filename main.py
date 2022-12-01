@@ -15,32 +15,16 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 larguraParede, alturaParede = 20, 100
 BOLARADIUS = 10
-
-"""
-class ParedeLaterais:
-    COR = WHITE
-    VELOCIDADE = 5
-
-    def __init__(self, x, y, largura, altura):
-        self.x = x
-        self.y = y
-        self.largura = largura
-        self.altura = altura
-
-    def draw(self, win):
-        pg.draw.rect(win, self.COR, (self.x, self.y,
-                     self.largura, self.altura))
-
-    def mover(self, up=True):
-        if up:
-            self.y -= self.VELOCIDADE
-        else:
-            self.y += self.VELOCIDADE
-"""
+FONTE_PLACAR = pg.font.SysFont("comicsans", 50)
 
 
-def draw(win, paredes, ball):
+def draw(win, paredes, ball, placar_esquerda, placar_direita):
     win.fill(BLACK)
+
+    placar_esquerda = FONTE_PLACAR.render(str(placar_esquerda), 1, WHITE)
+    placar_direita = FONTE_PLACAR.render(str(placar_direita), 1, WHITE)
+    win.blit(placar_esquerda, (largura//2 - 100, 10))
+    win.blit(placar_direita, (largura//2 + 100, 10))
 
     for parede in paredes:
         parede.draw(win)
@@ -99,12 +83,14 @@ def main():
         10, altura//2 - alturaParede//2, larguraParede, alturaParede)
     parede_direita = paredesLaterais.ParedeLaterais(
         largura - 10 - larguraParede, altura//2 - alturaParede//2, larguraParede, alturaParede)
+    placar_esquerda = 0
+    placar_direita = 0
 
     bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
 
     while rodando:
         clock.tick(FPS)
-        draw(tela, [parede_esquerda, parede_direita], bola)
+        draw(tela, [parede_esquerda, parede_direita], bola, placar_esquerda, placar_direita)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -114,6 +100,14 @@ def main():
         movimentacao_Das_Paredes(keys, parede_direita, parede_esquerda)
         bola.mover()
         colisaoParedes(parede_esquerda, parede_direita, bola)
+
+        if bola.x - bola.radius <= 0:
+            placar_direita += 1
+            bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
+        elif bola.x + bola.radius >= largura:
+            placar_esquerda += 1
+            bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
+        print(placar_esquerda, placar_direita)
 
     pg.quit()
 
