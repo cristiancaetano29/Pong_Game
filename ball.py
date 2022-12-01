@@ -6,7 +6,7 @@ WHITE = (255, 255, 255)
 
 
 class Ball:
-    VelocidadeMaxima = 10
+    VelocidadeMaxima = 5
     COR = WHITE
 
     def __init__(self, x, y, radius):
@@ -22,4 +22,3 @@ class Ball:
     def mover(self):
         self.x += self.velocidadeX
         self.y += self.velocidadeY
-

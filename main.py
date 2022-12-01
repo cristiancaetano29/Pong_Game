@@ -63,6 +63,35 @@ def movimentacao_Das_Paredes(keys, parede_esquerda, parede_direita):
         parede_direita.mover(False)
 
 
+def colisaoParedes(parede_esquerda, parede_direita, bola):
+    if bola.y + bola.radius >= altura:
+        bola.velocidadeY *= -1
+    elif bola.y - bola.radius <= 0:
+        bola.velocidadeY *= -1
+
+    if bola.velocidadeX < 0:
+        if bola.y >= parede_esquerda.y and bola.y <= parede_esquerda.y + parede_esquerda.altura:
+            if bola.x - bola.radius <= parede_esquerda.x + parede_esquerda.largura:
+                bola.velocidadeX *= -1
+
+                meio_y = parede_esquerda.y + parede_esquerda.altura / 2
+                diferenca_y = meio_y - bola.y
+                redutor = (parede_esquerda.altura / 2) / bola.VelocidadeMaxima
+                velocidade_Y = diferenca_y / redutor
+                bola.velocidadeY = -1 * velocidade_Y
+
+    else:
+        if bola.y >= parede_direita.y and bola.y <= parede_direita.y + parede_direita.altura:
+            if bola.x + bola.radius >= parede_direita.x:
+                bola.velocidadeX *= -1
+
+                meio_y = parede_direita.y + parede_direita.altura / 2
+                diferenca_y = meio_y - bola.y
+                redutor = (parede_direita.altura / 2) / bola.VelocidadeMaxima
+                velocidade_Y = diferenca_y / redutor
+                bola.velocidadeY = -1 * velocidade_Y
+
+
 def main():
     rodando = True
     clock = pg.time.Clock()
@@ -84,6 +113,7 @@ def main():
         keys = pg.key.get_pressed()
         movimentacao_Das_Paredes(keys, parede_direita, parede_esquerda)
         bola.mover()
+        colisaoParedes(parede_esquerda, parede_direita, bola)
 
     pg.quit()
 
