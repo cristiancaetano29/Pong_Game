@@ -83,6 +83,7 @@ def main():
 
         keys = pg.key.get_pressed()
         movimentacao_Das_Paredes(keys, parede_direita, parede_esquerda)
+        bola.mover()
 
     pg.quit()
 

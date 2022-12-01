@@ -19,7 +19,7 @@ class Ball:
     def draw(self, win):
         pg.draw.circle(win, WHITE, (self.x, self.y), self.radius)
 
-    def mover(self, paredes):
+    def mover(self):
         self.x += self.velocidadeX
         self.y += self.velocidadeY
 
