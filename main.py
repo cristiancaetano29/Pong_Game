@@ -1,5 +1,6 @@
 import pygame as pg
 
+import ball
 import paredesLaterais
 
 pg.init()
@@ -13,6 +14,7 @@ FPS = 60
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 larguraParede, alturaParede = 20, 100
+BOLARADIUS = 10
 
 """
 class ParedeLaterais:
@@ -37,12 +39,16 @@ class ParedeLaterais:
 """
 
 
-def draw(win, paredes):
+def draw(win, paredes, ball):
     win.fill(BLACK)
 
     for parede in paredes:
         parede.draw(win)
 
+    for i in range(altura//10):
+        pg.draw.rect(win, WHITE, (largura//2 - 5, i*10, 10, 10))
+
+    ball.draw(win)
     pg.display.update()
 
 
@@ -65,9 +71,11 @@ def main():
     parede_direita = paredesLaterais.ParedeLaterais(
         largura - 10 - larguraParede, altura//2 - alturaParede//2, larguraParede, alturaParede)
 
+    bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
+
     while rodando:
         clock.tick(FPS)
-        draw(tela, [parede_esquerda, parede_direita])
+        draw(tela, [parede_esquerda, parede_direita], bola)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
