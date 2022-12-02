@@ -3,6 +3,11 @@ import pygame as pg
 import ball
 import paredesLaterais
 
+from pygame.locals import (
+    K_SPACE,
+    QUIT,
+)
+
 pg.init()
 
 largura, altura = 700, 500
@@ -16,6 +21,7 @@ BLACK = (0, 0, 0)
 larguraParede, alturaParede = 20, 100
 BOLARADIUS = 10
 FONTE_PLACAR = pg.font.SysFont("comicsans", 50)
+PLACAR_VENCEDOR = 3
 
 
 def draw(win, paredes, ball, placar_esquerda, placar_direita):
@@ -107,10 +113,61 @@ def main():
         elif bola.x + bola.radius >= largura:
             placar_esquerda += 1
             bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
-        print(placar_esquerda, placar_direita)
+        #print(placar_esquerda, placar_direita)
 
-    pg.quit()
+        if placar_esquerda >= PLACAR_VENCEDOR : 
+            TEXTO_VENCEDOR = FONTE_PLACAR.render("Jogador da esquerda ganhou", 1, WHITE) 
+            tela.blit(TEXTO_VENCEDOR, (largura//2 - TEXTO_VENCEDOR.get_width() //2, altura//2 - TEXTO_VENCEDOR.get_height()//2))
+            pg.display.update()
+            pg.time.delay(2000)
+            tela.blit(menuFinal(tela))
+            pg.display.update()
+        elif placar_direita >= PLACAR_VENCEDOR : 
+            TEXTO_VENCEDOR = FONTE_PLACAR.render("Jogador da direita ganhou", 1, WHITE) 
+            tela.blit(TEXTO_VENCEDOR, (largura//2 - TEXTO_VENCEDOR.get_width() //2, altura//2 - TEXTO_VENCEDOR.get_height()//2))
+            pg.display.update()
+            pg.time.delay(2000)
+            tela.blit(menuFinal(tela))
+            pg.display.update()
 
+
+def menuInicial(win):
+    run = True
+    while run:
+        win.fill(BLACK)
+        titulo = FONTE_PLACAR.render(
+            "Pressione qualquer tecla para jogar", 1, WHITE)
+        win.blit(titulo, (largura//2 - titulo.get_width() //
+                 2, altura//2 - titulo.get_height()//2))
+        pg.display.update()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                run = False
+                pg.quit()
+            if event.type == pg.KEYDOWN:
+                main()
+
+def menuFinal(win):
+    run = True
+    while run:
+        win.fill(BLACK)
+        titulo = FONTE_PLACAR.render("Pressioneespaço para jogar novamente ou esc para sair", 1, WHITE)
+        win.blit(titulo, (largura//2 - titulo.get_width() // 2, altura//2 - titulo.get_height()//2))
+        pg.display.update()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                run = False
+                pg.quit()
+            if event.type == pg.K_KP_ENTER:
+                main()
+            
+            if event.type == pg.K_ESCAPE:
+                run = False
+                pg.quit()
+
+    
 
 if __name__ == "__main__":
-    main()
+    menuInicial(tela)
