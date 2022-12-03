@@ -1,16 +1,17 @@
 import pygame as pg
+from pygame.locals import (
+    K_ESCAPE,
+    K_F2,
+    K_SPACE
+
+)
 
 import ball
 import paredesLaterais
 
-from pygame.locals import (
-    K_SPACE,
-    QUIT,
-)
-
 pg.init()
 
-largura, altura = 700, 500
+largura, altura = 900, 500
 
 tela = pg.display.set_mode((largura, altura))
 pg.display.set_caption("Pong Game")
@@ -18,9 +19,13 @@ pg.display.set_caption("Pong Game")
 FPS = 60
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+YELLOW = (255,255,0)
+
 larguraParede, alturaParede = 20, 100
-BOLARADIUS = 10
+BOLARADIUS = 15
 FONTE_PLACAR = pg.font.SysFont("comicsans", 50)
+FONTE_MENU = pg.font.SysFont("comicsans", 30)
+FONTE_GANHADOR = pg.font.SysFont("comicsans", 40)
 PLACAR_VENCEDOR = 3
 
 
@@ -36,7 +41,7 @@ def draw(win, paredes, ball, placar_esquerda, placar_direita):
         parede.draw(win)
 
     for i in range(altura//10):
-        pg.draw.rect(win, WHITE, (largura//2 - 5, i*10, 10, 10))
+        pg.draw.rect(win, YELLOW, (largura//2 - 5, i*10, 10, 10))
 
     ball.draw(win)
     pg.display.update()
@@ -85,10 +90,8 @@ def colisaoParedes(parede_esquerda, parede_direita, bola):
 def main():
     rodando = True
     clock = pg.time.Clock()
-    parede_esquerda = paredesLaterais.ParedeLaterais(
-        10, altura//2 - alturaParede//2, larguraParede, alturaParede)
-    parede_direita = paredesLaterais.ParedeLaterais(
-        largura - 10 - larguraParede, altura//2 - alturaParede//2, larguraParede, alturaParede)
+    parede_esquerda = paredesLaterais.ParedeLaterais(10, altura//2 - alturaParede//2, larguraParede, alturaParede)
+    parede_direita = paredesLaterais.ParedeLaterais(largura - 10 - larguraParede, altura//2 - alturaParede//2, larguraParede, alturaParede)
     placar_esquerda = 0
     placar_direita = 0
 
@@ -96,7 +99,7 @@ def main():
 
     while rodando:
         clock.tick(FPS)
-        draw(tela, [parede_esquerda, parede_direita], bola, placar_esquerda, placar_direita)
+        draw(tela, [parede_esquerda, parede_direita],bola, placar_esquerda, placar_direita)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -113,32 +116,28 @@ def main():
         elif bola.x + bola.radius >= largura:
             placar_esquerda += 1
             bola = ball.Ball(largura//2, altura//2, BOLARADIUS)
-        #print(placar_esquerda, placar_direita)
 
-        if placar_esquerda >= PLACAR_VENCEDOR : 
-            TEXTO_VENCEDOR = FONTE_PLACAR.render("Jogador da esquerda ganhou", 1, WHITE) 
+        if placar_esquerda >= PLACAR_VENCEDOR:
+            TEXTO_VENCEDOR = FONTE_GANHADOR.render("Jogador da esquerda ganhou", 1, WHITE)
             tela.blit(TEXTO_VENCEDOR, (largura//2 - TEXTO_VENCEDOR.get_width() //2, altura//2 - TEXTO_VENCEDOR.get_height()//2))
             pg.display.update()
             pg.time.delay(2000)
-            tela.blit(menuFinal(tela))
-            pg.display.update()
-        elif placar_direita >= PLACAR_VENCEDOR : 
-            TEXTO_VENCEDOR = FONTE_PLACAR.render("Jogador da direita ganhou", 1, WHITE) 
+            menuFinal(tela)
+        elif placar_direita >= PLACAR_VENCEDOR:
+            TEXTO_VENCEDOR = FONTE_GANHADOR.render("Jogador da direita ganhou", 1, WHITE)
             tela.blit(TEXTO_VENCEDOR, (largura//2 - TEXTO_VENCEDOR.get_width() //2, altura//2 - TEXTO_VENCEDOR.get_height()//2))
             pg.display.update()
             pg.time.delay(2000)
-            tela.blit(menuFinal(tela))
-            pg.display.update()
+            menuFinal(tela)
+    pg.quit()
 
 
 def menuInicial(win):
     run = True
     while run:
         win.fill(BLACK)
-        titulo = FONTE_PLACAR.render(
-            "Pressione qualquer tecla para jogar", 1, WHITE)
-        win.blit(titulo, (largura//2 - titulo.get_width() //
-                 2, altura//2 - titulo.get_height()//2))
+        titulo = FONTE_MENU.render("Pressione qualquer tecla para jogar", 1, WHITE)
+        win.blit(titulo, (largura//2 - titulo.get_width() //2, altura//2 - titulo.get_height()//2))
         pg.display.update()
 
         for event in pg.event.get():
@@ -147,27 +146,32 @@ def menuInicial(win):
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 main()
+    pg.quit()
+
 
 def menuFinal(win):
     run = True
     while run:
         win.fill(BLACK)
-        titulo = FONTE_PLACAR.render("Pressioneespaço para jogar novamente ou esc para sair", 1, WHITE)
-        win.blit(titulo, (largura//2 - titulo.get_width() // 2, altura//2 - titulo.get_height()//2))
+        tituloFinal = FONTE_MENU.render("Pressione espaco para jogar novamente ou esc para sair", 1, WHITE)
+        win.blit(tituloFinal, (largura//2 - tituloFinal.get_width() //2, altura//2 - tituloFinal.get_height()//2))
         pg.display.update()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
                 pg.quit()
-            if event.type == pg.K_KP_ENTER:
+
+            if event.key == K_SPACE:
                 main()
-            
-            if event.type == pg.K_ESCAPE:
+
+            if event.key == K_ESCAPE:
                 run = False
                 pg.quit()
 
-    
+    pg.quit()
+
+
 
 if __name__ == "__main__":
     menuInicial(tela)

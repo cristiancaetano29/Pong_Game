@@ -1,10 +1,11 @@
 import pygame as pg
 
 WHITE = (255, 255, 255)
+GREEN = (0,128,0)
 
 
 class ParedeLaterais:
-    COR = WHITE
+    COR = GREEN
     VELOCIDADE = 5
 
     def __init__(self, x, y, largura, altura):
